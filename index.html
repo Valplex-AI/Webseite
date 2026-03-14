@@ -23,9 +23,9 @@
             --panel-edge: rgba(255, 255, 255, 0.08);
             --font-body: "Inter", "Avenir Next", "Segoe UI", Arial, sans-serif;
             --font-display: "Plus Jakarta Sans", "Inter", "Avenir Next", "Segoe UI", Arial, sans-serif;
-            --surface: #080808;
-            --surface-border: rgba(255, 255, 255, 0.22);
-            --surface-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 -20px 40px rgba(255, 255, 255, 0.02), 0 16px 36px rgba(0, 0, 0, 0.3);
+            --surface: #050505;
+            --surface-border: #f5f5f5;
+            --surface-shadow: none;
             --surface-radius: 18px;
             --surface-text: #ffffff;
             --surface-muted: rgba(255, 255, 255, 0.7);
@@ -61,6 +61,7 @@
             --collapse-opacity-one: 0.7;
             --collapse-opacity-two: 0.3;
             --phase-one-end: 0.58;
+            --site-header-height: clamp(92px, 12vh, 118px);
         }
 
         @supports (height: 100svh) {
@@ -86,10 +87,64 @@
             background: var(--bg);
             color: var(--fg);
             line-height: 1;
+            overflow-x: hidden;
+        }
+
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 20;
+            opacity: 0;
+            transform: translateY(-100%);
+            pointer-events: none;
+            transition: transform 0.24s ease, opacity 0.24s ease;
+            background: rgba(5, 5, 5, 0.94);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .site-header.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .site-header-inner {
+            width: min(1120px, calc(100% - (2 * var(--edge-space))));
+            min-height: var(--site-header-height);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .site-header-brand {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(12px, 2vw, 18px);
+            color: var(--fg);
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: clamp(18px, 2.5vw, 34px);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+        }
+
+        .site-header-logo {
+            width: clamp(54px, 7vw, 78px);
+            height: auto;
+            display: block;
         }
 
         .scroll-stage {
-            min-height: calc(var(--viewport-height) * 3);
+            background: var(--bg);
+        }
+
+        .hero-stage {
+            min-height: calc(var(--viewport-height) * 2.2);
             background: var(--bg);
         }
 
@@ -99,6 +154,9 @@
             min-height: var(--viewport-height);
             padding: var(--edge-space);
             overflow: hidden;
+            background: linear-gradient(180deg, rgba(5, 5, 5, 0.98) 0%, rgba(5, 5, 5, 0.95) 70%, rgba(5, 5, 5, 0.9) 100%);
+            z-index: 1;
+            pointer-events: none;
         }
 
         .hero-content {
@@ -200,7 +258,9 @@
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            padding: calc(var(--header-clearance) + clamp(32px, 6vw, 72px)) clamp(32px, 6vw, 72px) clamp(32px, 6vw, 72px);
+            padding: calc(var(--site-header-height) + clamp(32px, 6vw, 72px)) clamp(32px, 6vw, 72px) clamp(32px, 6vw, 72px);
+            position: relative;
+            z-index: 2;
         }
 
         .second-page-content {
@@ -236,15 +296,16 @@
             justify-self: center;
             align-self: center;
             display: inline-flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             width: fit-content;
             margin: 10px auto 0;
             padding: 14px 22px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.32);
-            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--fg);
+            background: var(--bg);
             color: #ffffff;
             text-decoration: none;
             font-size: 14px;
@@ -252,12 +313,14 @@
             letter-spacing: 0.04em;
             text-transform: uppercase;
             transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            cursor: pointer;
+            text-align: center;
         }
 
         .section-jump:hover {
             transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.48);
-            background: rgba(255, 255, 255, 0.18);
+            border-color: var(--fg);
+            background: var(--bg);
         }
 
         .third-page {
@@ -265,7 +328,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: clamp(32px, 6vw, 72px);
+            padding: calc(var(--site-header-height) + clamp(32px, 6vw, 72px)) clamp(32px, 6vw, 72px) clamp(32px, 6vw, 72px);
+            scroll-margin-top: calc(var(--site-header-height) + 24px);
+            position: relative;
+            z-index: 2;
         }
 
         .third-page-card {
@@ -287,9 +353,9 @@
         }
 
         .third-page-card p {
-            color: var(--surface-muted);
+            color: var(--muted);
             line-height: 1.6;
-            font-size: clamp(16px, 1.8vw, 20px);
+            font-size: clamp(16px, 1.6vw, 20px);
             max-width: 560px;
             margin: 0 auto 28px;
         }
@@ -300,19 +366,21 @@
             justify-content: center;
             padding: 16px 24px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border: 1px solid var(--fg);
             color: var(--surface-text);
             text-decoration: none;
             font-family: var(--font-display);
             font-size: clamp(16px, 2vw, 22px);
             letter-spacing: -0.02em;
             transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            cursor: pointer;
+            background: var(--bg);
         }
 
         .contact-link:hover {
             transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.32);
-            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--fg);
+            background: var(--bg);
         }
 
         .second-page-card {
@@ -331,11 +399,41 @@
         }
 
         .second-page-card p {
-            color: var(--surface-muted);
+            color: var(--muted);
         }
 
         .second-page-card h3 {
             letter-spacing: -0.015em;
+        }
+
+        .site-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 28px var(--edge-space) 40px;
+            background: #050505;
+        }
+
+        .footer-nav {
+            width: min(1120px, 100%);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(18px, 4vw, 40px);
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+            text-underline-offset: 4px;
         }
 
         @media (max-width: 780px) {
@@ -383,6 +481,10 @@
             .contact-link {
                 width: 100%;
             }
+
+            .footer-nav {
+                justify-content: flex-start;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -403,17 +505,27 @@
 </head>
 
 <body>
-    <main class="scroll-stage" aria-label="Valplex hero section">
-        <section class="hero" aria-label="Hero content">
-            <div class="hero-content">
-                <img src="valplex-logo.png" class="logo" alt="Valplex logo" width="140" height="140" decoding="async" />
-                <div class="headline-wrap">
-                    <h1 aria-label="Value in Complexity collapses to Valplex">
-                        <span class="headline-full">Value in Complexity</span>
-                    </h1>
-                    <div class="hero-wordmark" aria-hidden="true">Valplex</div>
+    <header class="site-header" aria-label="Primary navigation">
+        <div class="site-header-inner">
+            <a class="site-header-brand" href="#top" aria-label="Back to top">
+                <img src="valplex-logo.png" class="site-header-logo" alt="" width="78" height="78" decoding="async" />
+                <span>Valplex</span>
+            </a>
+        </div>
+    </header>
+    <main class="scroll-stage" aria-label="Valplex website">
+        <section class="hero-stage" id="top" aria-label="Valplex hero section">
+            <section class="hero" aria-label="Hero content">
+                <div class="hero-content">
+                    <img src="valplex-logo.png" class="logo" alt="Valplex logo" width="140" height="140" decoding="async" />
+                    <div class="headline-wrap">
+                        <h1 aria-label="Value in Complexity collapses to Valplex">
+                            <span class="headline-full">Value in Complexity</span>
+                        </h1>
+                        <div class="hero-wordmark" aria-hidden="true">Valplex</div>
+                    </div>
                 </div>
-            </div>
+            </section>
         </section>
         <section class="second-page" aria-label="About Valplex">
             <div class="second-page-content">
@@ -430,43 +542,49 @@
                         <h3>What we do</h3>
                         <p>We work on ways to transform complexity into structure, clarity, and direction. That can mean organizing information, shaping strategy, or designing digital experiences that make a complicated idea feel simple.</p>
                     </article>
-                    <a class="section-jump" href="#contact">
-                        Get in touch
-                        <span aria-hidden="true">&darr;</span>
-                    </a>
                 </div>
+                <a class="section-jump" href="#contact">
+                    Get in touch!
+                    <span aria-hidden="true">&darr;</span>
+                </a>
             </div>
         </section>
         <section class="third-page" id="contact" aria-label="Contact Valplex">
             <div class="third-page-card">
-                <h2>Get in touch</h2>
+                <h2>Get in touch!</h2>
                 <p>If you want to talk about an idea, a problem, or a possible collaboration, send us a message and we will get back to you.</p>
-                <a class="contact-link" href="mailto:hello@valplex.com">hello@valplex.com</a>
+                <a class="contact-link" href="mailto:info@valplex.de?subject=Valplex%20Inquiry" aria-label="Email Valplex at info@valplex.de">info@valplex.de</a>
             </div>
         </section>
     </main>
+    <footer class="site-footer" aria-label="Legal links">
+        <nav class="footer-nav">
+            <a class="footer-link" href="privacy-policy.html">Privacy Policy</a>
+            <a class="footer-link" href="terms-of-use.html">Terms of Use</a>
+            <a class="footer-link" href="legal.html">Legal</a>
+        </nav>
+    </footer>
     <script>
         (function () {
             const root = document.documentElement;
-            const hero = document.querySelector('.hero');
-            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const heroStage = document.querySelector('.hero-stage');
+            const siteHeader = document.querySelector('.site-header');
 
             function updateProgress() {
-                if (reducedMotion) {
-                    root.style.setProperty('--progress', '0');
-                    root.style.setProperty('--phase-one', '0');
-                    root.style.setProperty('--phase-two', '0');
-                    return;
-                }
-
-                const viewport = hero ? hero.getBoundingClientRect().height : (window.innerHeight || 1);
-                const progress = Math.min(Math.max(window.scrollY / viewport, 0), 1);
+                const viewport = window.innerHeight || 1;
+                const stageHeight = heroStage ? Math.max(heroStage.offsetHeight - viewport, 1) : viewport;
+                const stageTop = heroStage ? heroStage.getBoundingClientRect().top : 0;
+                const travelled = Math.min(Math.max(-stageTop, 0), stageHeight);
+                const progress = Math.min(Math.max(travelled / stageHeight, 0), 1);
                 const phaseOneEnd = parseFloat(getComputedStyle(root).getPropertyValue('--phase-one-end')) || 0.58;
                 const phaseOne = Math.min(progress / phaseOneEnd, 1);
                 const phaseTwo = progress <= phaseOneEnd ? 0 : Math.min((progress - phaseOneEnd) / (1 - phaseOneEnd), 1);
                 root.style.setProperty('--progress', progress.toFixed(4));
                 root.style.setProperty('--phase-one', phaseOne.toFixed(4));
                 root.style.setProperty('--phase-two', phaseTwo.toFixed(4));
+                if (siteHeader) {
+                    siteHeader.classList.toggle('is-visible', progress >= 0.82);
+                }
             }
             window.addEventListener('scroll', updateProgress, { passive: true });
             window.addEventListener('resize', updateProgress);
