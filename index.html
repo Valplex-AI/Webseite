@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Valplex — Value from Complexity." />
+    <meta name="description" content="Valplex — Value in Complexity." />
     <meta property="og:title" content="Valplex" />
-    <meta property="og:description" content="Value from Complexity" />
+    <meta property="og:description" content="Value in Complexity" />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#050505" />
     <title>Valplex</title>
@@ -24,9 +24,9 @@
             --phase-one: 0;
             --phase-two: 0;
             --headline-spacing-tighten: 0.06em;
-            --logo-offset-start: calc(18 * var(--motion-unit));
-            --logo-phase-one-travel: calc(7 * var(--motion-unit));
-            --logo-phase-two-travel: calc(18 * var(--motion-unit));
+            --logo-offset-start: calc(24 * var(--motion-unit));
+            --logo-phase-one-travel: calc(10 * var(--motion-unit));
+            --logo-phase-two-travel: calc(12 * var(--motion-unit));
             --headline-move-one: calc(28 * var(--motion-unit));
             --headline-move-two: calc(10 * var(--motion-unit));
             --headline-scale-one: 0.06;
@@ -35,16 +35,19 @@
             --headline-clip-right: 42%;
             --headline-fade-one: 1;
             --headline-fade-two: 0;
-            --wordmark-spacing-one: 0.18em;
-            --wordmark-spacing-two: 0.2em;
-            --wordmark-offset-start: calc(28 * var(--motion-unit));
-            --wordmark-rise-one: calc(28 * var(--motion-unit));
-            --wordmark-rise-two: calc(38 * var(--motion-unit));
-            --wordmark-scale-one: 0.18;
-            --wordmark-scale-two: 0.4;
-            --wordmark-opacity-base: 0.72;
-            --wordmark-opacity-one: 0.34;
-            --wordmark-opacity-two: 0;
+            --header-clearance: clamp(188px, 26vh, 248px);
+            --collapse-top: clamp(164px, 21vh, 204px);
+            --collapse-offset-start: calc(32 * var(--motion-unit));
+            --collapse-rise-one: calc(18 * var(--motion-unit));
+            --collapse-rise-two: calc(14 * var(--motion-unit));
+            --collapse-scale-base: 0.84;
+            --collapse-scale-one: 0.1;
+            --collapse-scale-two: 0.06;
+            --collapse-spacing-base: 0.22em;
+            --collapse-spacing-one: 0.08em;
+            --collapse-spacing-two: 0.06em;
+            --collapse-opacity-one: 0.7;
+            --collapse-opacity-two: 0.3;
             --phase-one-end: 0.58;
         }
 
@@ -108,57 +111,78 @@
         }
 
         .headline-wrap {
-            position: relative;
-            width: min(92vw, 960px);
-            min-height: clamp(180px, 30vh, 260px);
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            min-height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+            pointer-events: none;
         }
 
         h1 {
-            font-size: clamp(28px, 4.4vw, 64px);
-            letter-spacing: calc(-0.03em - (var(--phase-one) * var(--headline-spacing-tighten)));
+            font-size: clamp(36px, 5.6vw, 84px);
             font-weight: 500;
-            color: var(--muted);
             position: absolute;
             left: 50%;
             top: 50%;
             width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             white-space: nowrap;
-            overflow: hidden;
             transform:
                 translate(-50%, calc(-50% + (var(--phase-one) * var(--headline-move-one)) - (var(--phase-two) * var(--headline-move-two))))
                 scale(calc(1 - (var(--phase-one) * var(--headline-scale-one)) - (var(--phase-two) * var(--headline-scale-two))));
             transform-origin: center center;
-            clip-path: inset(0 calc(var(--phase-one) * var(--headline-clip-right)) 0 calc(var(--phase-one) * var(--headline-clip-left)));
-            opacity: calc(1 - (var(--phase-one) * var(--headline-fade-one)) - (var(--phase-two) * var(--headline-fade-two)));
-            transition: transform 0.06s linear, opacity 0.06s linear, letter-spacing 0.06s linear, clip-path 0.06s linear;
-            will-change: transform, opacity, letter-spacing, clip-path;
+            transition: transform 0.06s linear;
+            will-change: transform;
         }
 
-        .bottom {
-            text-transform: uppercase;
-            letter-spacing: calc(0.35em - (var(--phase-one) * var(--wordmark-spacing-one)) - (var(--phase-two) * var(--wordmark-spacing-two)));
-            font-size: clamp(12px, 1.4vw, 20px);
-            font-weight: 600;
+        .headline-full,
+        .headline-collapse {
             position: absolute;
             left: 50%;
             top: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            transform: translate(-50%, -50%);
+        }
+
+        .headline-full {
+            color: var(--muted);
+            letter-spacing: calc(-0.03em - (var(--phase-one) * var(--headline-spacing-tighten)));
+            clip-path: inset(0 calc(var(--phase-one) * var(--headline-clip-right)) 0 calc(var(--phase-one) * var(--headline-clip-left)));
+            opacity: calc(1 - (var(--phase-one) * var(--headline-fade-one)) - (var(--phase-two) * var(--headline-fade-two)));
+            transition: opacity 0.06s linear, letter-spacing 0.06s linear, clip-path 0.06s linear;
+            will-change: opacity, letter-spacing, clip-path;
+        }
+
+        .headline-collapse {
+            color: var(--fg);
+            font-size: clamp(18px, 2.5vw, 34px);
+            font-weight: 600;
+            position: absolute;
+            top: var(--collapse-top);
             transform:
-                translate(-50%, calc(var(--wordmark-offset-start) - (var(--phase-one) * var(--wordmark-rise-one)) - (var(--phase-two) * var(--wordmark-rise-two))))
-                scale(calc(0.92 + (var(--phase-one) * var(--wordmark-scale-one)) - (var(--phase-two) * var(--wordmark-scale-two))));
-            opacity: calc(var(--wordmark-opacity-base) + (var(--phase-one) * var(--wordmark-opacity-one)) - (var(--phase-two) * var(--wordmark-opacity-two)));
-            transition: transform 0.06s linear, opacity 0.06s linear;
-            will-change: transform, opacity;
+                translate(-50%, calc(-50% + var(--collapse-offset-start) - (var(--phase-one) * var(--collapse-rise-one)) - (var(--phase-two) * var(--collapse-rise-two))))
+                scale(calc(var(--collapse-scale-base) + (var(--phase-one) * var(--collapse-scale-one)) + (var(--phase-two) * var(--collapse-scale-two))));
+            letter-spacing: calc(var(--collapse-spacing-base) - (var(--phase-one) * var(--collapse-spacing-one)) - (var(--phase-two) * var(--collapse-spacing-two)));
+            opacity: calc((var(--phase-one) * var(--collapse-opacity-one)) + (var(--phase-two) * var(--collapse-opacity-two)));
+            transition: transform 0.06s linear, opacity 0.06s linear, letter-spacing 0.06s linear;
+            will-change: transform, opacity, letter-spacing;
         }
 
         .second-page {
             min-height: var(--viewport-height);
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
-            padding: clamp(32px, 6vw, 72px);
+            padding: calc(var(--header-clearance) + clamp(32px, 6vw, 72px)) clamp(32px, 6vw, 72px) clamp(32px, 6vw, 72px);
         }
 
         .second-page-content {
@@ -209,28 +233,32 @@
                 --headline-scale-two: 0.05;
                 --headline-clip-left: 36%;
                 --headline-clip-right: 36%;
-                --wordmark-spacing-one: 0.14em;
-                --wordmark-spacing-two: 0.14em;
-                --wordmark-rise-two: calc(26 * var(--motion-unit));
-                --wordmark-scale-one: 0.12;
-                --wordmark-scale-two: 0.22;
+                --header-clearance: clamp(156px, 24vh, 204px);
+                --collapse-top: clamp(136px, 19vh, 170px);
+                --collapse-offset-start: calc(24 * var(--motion-unit));
+                --collapse-rise-one: calc(13 * var(--motion-unit));
+                --collapse-rise-two: calc(11 * var(--motion-unit));
+                --collapse-scale-base: 0.9;
+                --collapse-scale-one: 0.05;
+                --collapse-scale-two: 0.03;
+                --collapse-spacing-base: 0.16em;
+                --collapse-spacing-one: 0.05em;
+                --collapse-spacing-two: 0.04em;
+                --logo-offset-start: calc(18 * var(--motion-unit));
+                --logo-phase-one-travel: calc(7 * var(--motion-unit));
+                --logo-phase-two-travel: calc(9 * var(--motion-unit));
             }
 
             .logo {
                 width: clamp(84px, 24vw, 120px);
             }
 
-            .headline-wrap {
-                width: min(94vw, 560px);
-                min-height: clamp(150px, 28vh, 220px);
-            }
-
             h1 {
-                font-size: clamp(24px, 7.6vw, 42px);
+                font-size: clamp(28px, 8.8vw, 52px);
             }
 
-            .bottom {
-                font-size: clamp(11px, 3vw, 15px);
+            .headline-collapse {
+                font-size: clamp(16px, 4.6vw, 24px);
             }
 
             .second-page-content {
@@ -242,7 +270,8 @@
 
             .logo,
             h1,
-            .bottom {
+            .headline-full,
+            .headline-collapse {
                 transition: none;
             }
         }
@@ -255,15 +284,17 @@
             <div class="hero-content">
                 <img src="valplex-logo.png" class="logo" alt="Valplex logo" width="140" height="140" decoding="async" />
                 <div class="headline-wrap">
-                    <h1>Value from Complexity</h1>
-                    <div class="bottom">VALPLEX</div>
+                    <h1 aria-label="Value in Complexity collapses to Valplex">
+                        <span class="headline-full">Value in Complexity</span>
+                        <span class="headline-collapse" aria-hidden="true">Valplex</span>
+                    </h1>
                 </div>
             </div>
         </section>
         <section class="second-page" aria-label="About Valplex">
             <div class="second-page-content">
                 <div class="second-page-intro">
-                    <h2>Who we are and what we do</h2>
+                    <h2>Who we are and what we do or not</h2>
                     <p>Valplex turns complexity into clear, useful value. We focus on understanding difficult problems, structuring them well, and building solutions that people can actually use.</p>
                 </div>
                 <div class="second-page-grid">
