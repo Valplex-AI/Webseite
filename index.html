@@ -571,14 +571,21 @@
             const root = document.documentElement;
             const heroStage = document.querySelector('.hero-stage');
             const siteHeader = document.querySelector('.site-header');
+            let ticking = false;
+            let viewport = window.innerHeight || 1;
+            let stageHeight = heroStage ? Math.max(heroStage.offsetHeight - viewport, 1) : viewport;
+            let phaseOneEnd = 0.58;
+
+            function refreshMeasurements() {
+                viewport = window.innerHeight || 1;
+                stageHeight = heroStage ? Math.max(heroStage.offsetHeight - viewport, 1) : viewport;
+                phaseOneEnd = parseFloat(getComputedStyle(root).getPropertyValue('--phase-one-end')) || 0.58;
+            }
 
             function updateProgress() {
-                const viewport = window.innerHeight || 1;
-                const stageHeight = heroStage ? Math.max(heroStage.offsetHeight - viewport, 1) : viewport;
                 const stageTop = heroStage ? heroStage.getBoundingClientRect().top : 0;
                 const travelled = Math.min(Math.max(-stageTop, 0), stageHeight);
                 const progress = Math.min(Math.max(travelled / stageHeight, 0), 1);
-                const phaseOneEnd = parseFloat(getComputedStyle(root).getPropertyValue('--phase-one-end')) || 0.58;
                 const phaseOne = Math.min(progress / phaseOneEnd, 1);
                 const phaseTwo = progress <= phaseOneEnd ? 0 : Math.min((progress - phaseOneEnd) / (1 - phaseOneEnd), 1);
                 root.style.setProperty('--progress', progress.toFixed(4));
@@ -587,9 +594,25 @@
                 if (siteHeader) {
                     siteHeader.classList.toggle('is-visible', progress >= 0.82);
                 }
+                ticking = false;
             }
-            window.addEventListener('scroll', updateProgress, { passive: true });
-            window.addEventListener('resize', updateProgress);
+
+            function requestUpdate() {
+                if (ticking) {
+                    return;
+                }
+
+                ticking = true;
+                window.requestAnimationFrame(updateProgress);
+            }
+
+            window.addEventListener('scroll', requestUpdate, { passive: true });
+            window.addEventListener('resize', function () {
+                refreshMeasurements();
+                requestUpdate();
+            });
+
+            refreshMeasurements();
             updateProgress();
         })();
     </script>
