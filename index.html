@@ -32,9 +32,6 @@
             --viewport-height: 100vh;
             --motion-unit: 1vh;
             --edge-space: clamp(20px, 4vw, 48px);
-            --progress: 0;
-            --phase-one: 0;
-            --phase-two: 0;
             --headline-spacing-tighten: 0.06em;
             --logo-offset-start: calc(24 * var(--motion-unit));
             --logo-phase-one-travel: calc(10 * var(--motion-unit));
@@ -148,6 +145,9 @@
         .hero-stage {
             min-height: calc(var(--viewport-height) * 2.2);
             background: var(--bg);
+            --progress: 0;
+            --phase-one: 0;
+            --phase-two: 0;
         }
 
         .hero {
@@ -575,24 +575,50 @@
             let viewport = window.innerHeight || 1;
             let stageHeight = heroStage ? Math.max(heroStage.offsetHeight - viewport, 1) : viewport;
             let phaseOneEnd = 0.58;
+            let stageStart = heroStage ? heroStage.offsetTop : 0;
+            let lastPhaseOne = '';
+            let lastPhaseTwo = '';
+            let lastProgress = '';
+            let headerVisible = false;
 
             function refreshMeasurements() {
                 viewport = window.innerHeight || 1;
                 stageHeight = heroStage ? Math.max(heroStage.offsetHeight - viewport, 1) : viewport;
                 phaseOneEnd = parseFloat(getComputedStyle(root).getPropertyValue('--phase-one-end')) || 0.58;
+                stageStart = heroStage ? heroStage.offsetTop : 0;
             }
 
             function updateProgress() {
-                const stageTop = heroStage ? heroStage.getBoundingClientRect().top : 0;
-                const travelled = Math.min(Math.max(-stageTop, 0), stageHeight);
+                const scrollTop = window.scrollY || window.pageYOffset || 0;
+                const travelled = Math.min(Math.max(scrollTop - stageStart, 0), stageHeight);
                 const progress = Math.min(Math.max(travelled / stageHeight, 0), 1);
                 const phaseOne = Math.min(progress / phaseOneEnd, 1);
                 const phaseTwo = progress <= phaseOneEnd ? 0 : Math.min((progress - phaseOneEnd) / (1 - phaseOneEnd), 1);
-                root.style.setProperty('--progress', progress.toFixed(4));
-                root.style.setProperty('--phase-one', phaseOne.toFixed(4));
-                root.style.setProperty('--phase-two', phaseTwo.toFixed(4));
+                const progressValue = progress.toFixed(4);
+                const phaseOneValue = phaseOne.toFixed(4);
+                const phaseTwoValue = phaseTwo.toFixed(4);
+                const nextHeaderVisible = progress >= 0.82;
+
+                if (heroStage && progressValue !== lastProgress) {
+                    heroStage.style.setProperty('--progress', progressValue);
+                    lastProgress = progressValue;
+                }
+
+                if (heroStage && phaseOneValue !== lastPhaseOne) {
+                    heroStage.style.setProperty('--phase-one', phaseOneValue);
+                    lastPhaseOne = phaseOneValue;
+                }
+
+                if (heroStage && phaseTwoValue !== lastPhaseTwo) {
+                    heroStage.style.setProperty('--phase-two', phaseTwoValue);
+                    lastPhaseTwo = phaseTwoValue;
+                }
+
                 if (siteHeader) {
-                    siteHeader.classList.toggle('is-visible', progress >= 0.82);
+                    if (nextHeaderVisible !== headerVisible) {
+                        siteHeader.classList.toggle('is-visible', nextHeaderVisible);
+                        headerVisible = nextHeaderVisible;
+                    }
                 }
                 ticking = false;
             }
