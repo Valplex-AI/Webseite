@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Valplex — Value from Complexity." />
+    <meta property="og:title" content="Valplex" />
+    <meta property="og:description" content="Value from Complexity" />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#050505" />
+    <title>Valplex</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --fg: #f5f5f5;
+            --muted: #cfcfcf;
+            --panel: #111111;
+            --panel-edge: rgba(255, 255, 255, 0.08);
+            --edge-space: clamp(20px, 4vw, 48px);
+            --progress: 0;
+            --phase-one: 0;
+            --phase-two: 0;
+            --headline-spacing-tighten: 0.06em;
+            --headline-move-one: 28vh;
+            --headline-move-two: 10vh;
+            --headline-scale-one: 0.06;
+            --headline-scale-two: 0.08;
+            --headline-clip-left: 42%;
+            --headline-clip-right: 42%;
+            --headline-fade-one: 1;
+            --headline-fade-two: 0;
+            --wordmark-spacing-one: 0.18em;
+            --wordmark-spacing-two: 0.2em;
+            --wordmark-rise-two: 42vh;
+            --wordmark-scale-one: 0.18;
+            --wordmark-scale-two: 0.4;
+            --wordmark-opacity-base: 0.72;
+            --wordmark-opacity-one: 0.34;
+            --wordmark-opacity-two: 0;
+            --phase-one-end: 0.58;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Inter", "Avenir Next", "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1;
+        }
+
+        .scroll-stage {
+            min-height: 200vh;
+            background: var(--bg);
+        }
+
+        .hero {
+            position: sticky;
+            top: 0;
+            min-height: 100vh;
+            padding: var(--edge-space);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            min-height: calc(100vh - (2 * var(--edge-space)));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            width: clamp(96px, 11vw, 140px);
+            height: auto;
+            display: block;
+            position: absolute;
+            top: clamp(18px, 4vh, 36px);
+            left: 50%;
+            transform:
+                translateX(-50%)
+                translateY(calc(18vh - (var(--phase-one) * 7vh) - (var(--phase-two) * 18vh)))
+                scale(calc(1 - (var(--phase-two) * 0.12)));
+            transition: transform 0.06s linear;
+            will-change: transform;
+        }
+
+        .headline-wrap {
+            position: relative;
+            width: min(92vw, 960px);
+            min-height: clamp(180px, 30vh, 260px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: clamp(28px, 4.4vw, 64px);
+            letter-spacing: calc(-0.03em - (var(--phase-one) * var(--headline-spacing-tighten)));
+            font-weight: 500;
+            color: var(--muted);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            transform:
+                translate(-50%, calc(-50% + (var(--phase-one) * var(--headline-move-one)) - (var(--phase-two) * var(--headline-move-two))))
+                scale(calc(1 - (var(--phase-one) * var(--headline-scale-one)) - (var(--phase-two) * var(--headline-scale-two))));
+            transform-origin: center center;
+            clip-path: inset(0 calc(var(--phase-one) * var(--headline-clip-right)) 0 calc(var(--phase-one) * var(--headline-clip-left)));
+            opacity: calc(1 - (var(--phase-one) * var(--headline-fade-one)) - (var(--phase-two) * var(--headline-fade-two)));
+            transition: transform 0.06s linear, opacity 0.06s linear, letter-spacing 0.06s linear, clip-path 0.06s linear;
+            will-change: transform, opacity, letter-spacing, clip-path;
+        }
+
+        .bottom {
+            text-transform: uppercase;
+            letter-spacing: calc(0.35em - (var(--phase-one) * var(--wordmark-spacing-one)) - (var(--phase-two) * var(--wordmark-spacing-two)));
+            font-size: clamp(12px, 1.4vw, 20px);
+            font-weight: 600;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform:
+                translate(-50%, calc(28vh - (var(--phase-one) * 28vh) - (var(--phase-two) * var(--wordmark-rise-two))))
+                scale(calc(0.92 + (var(--phase-one) * var(--wordmark-scale-one)) - (var(--phase-two) * var(--wordmark-scale-two))));
+            opacity: calc(var(--wordmark-opacity-base) + (var(--phase-one) * var(--wordmark-opacity-one)) - (var(--phase-two) * var(--wordmark-opacity-two)));
+            transition: transform 0.06s linear, opacity 0.06s linear;
+            will-change: transform, opacity;
+        }
+
+        .second-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(32px, 6vw, 72px);
+        }
+
+        .second-page-content {
+            width: min(1040px, 100%);
+            display: grid;
+            gap: clamp(24px, 4vw, 48px);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
+        }
+
+        .second-page-intro h2 {
+            font-size: clamp(32px, 5vw, 64px);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            margin-bottom: 20px;
+        }
+
+        .second-page-intro p,
+        .second-page-card p {
+            color: var(--muted);
+            line-height: 1.5;
+            font-size: clamp(16px, 1.6vw, 20px);
+        }
+
+        .second-page-grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .second-page-card {
+            padding: clamp(20px, 3vw, 28px);
+            background: var(--panel);
+            border: 1px solid var(--panel-edge);
+            border-radius: 20px;
+        }
+
+        .second-page-card h3 {
+            font-size: clamp(18px, 2vw, 24px);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 780px) {
+            .second-page-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .logo,
+            h1,
+            .bottom {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="scroll-stage" aria-label="Valplex hero section">
+        <section class="hero" aria-label="Hero content">
+            <div class="hero-content">
+                <img src="valplex-logo.png" class="logo" alt="Valplex logo" width="140" height="140" decoding="async" />
+                <div class="headline-wrap">
+                    <h1>Value from Complexity</h1>
+                    <div class="bottom">VALPLEX</div>
+                </div>
+            </div>
+        </section>
+        <section class="second-page" aria-label="About Valplex">
+            <div class="second-page-content">
+                <div class="second-page-intro">
+                    <h2>Who we are and what we do</h2>
+                    <p>Valplex turns complexity into clear, useful value. We focus on understanding difficult problems, structuring them well, and building solutions that people can actually use.</p>
+                </div>
+                <div class="second-page-grid">
+                    <article class="second-page-card">
+                        <h3>Who we are</h3>
+                        <p>We are building Valplex as a startup around one idea: difficult information should not stay difficult. We want to make complex topics easier to understand, navigate, and apply.</p>
+                    </article>
+                    <article class="second-page-card">
+                        <h3>What we do</h3>
+                        <p>We work on ways to transform complexity into structure, clarity, and direction. That can mean organizing information, shaping strategy, or designing digital experiences that make a complicated idea feel simple.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        (function () {
+            const root = document.documentElement;
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function updateProgress() {
+                if (reducedMotion) {
+                    root.style.setProperty('--progress', '0');
+                    root.style.setProperty('--phase-one', '0');
+                    root.style.setProperty('--phase-two', '0');
+                    return;
+                }
+
+                const viewport = window.innerHeight || 1;
+                const progress = Math.min(Math.max(window.scrollY / viewport, 0), 1);
+                const phaseOneEnd = parseFloat(getComputedStyle(root).getPropertyValue('--phase-one-end')) || 0.58;
+                const phaseOne = Math.min(progress / phaseOneEnd, 1);
+                const phaseTwo = progress <= phaseOneEnd ? 0 : Math.min((progress - phaseOneEnd) / (1 - phaseOneEnd), 1);
+                root.style.setProperty('--progress', progress.toFixed(4));
+                root.style.setProperty('--phase-one', phaseOne.toFixed(4));
+                root.style.setProperty('--phase-two', phaseTwo.toFixed(4));
+            }
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            window.addEventListener('resize', updateProgress);
+            updateProgress();
+        })();
+    </script>
+</body>
+
+</html>
