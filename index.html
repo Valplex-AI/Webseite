@@ -142,7 +142,7 @@
         }
 
         .headline-full,
-        .headline-collapse {
+        .hero-wordmark {
             position: absolute;
             left: 50%;
             top: 50%;
@@ -162,7 +162,7 @@
             will-change: opacity, letter-spacing, clip-path;
         }
 
-        .headline-collapse {
+        .hero-wordmark {
             color: var(--fg);
             font-size: clamp(18px, 2.5vw, 34px);
             font-weight: 600;
@@ -271,7 +271,7 @@
             .logo,
             h1,
             .headline-full,
-            .headline-collapse {
+            .hero-wordmark {
                 transition: none;
             }
         }
@@ -286,8 +286,8 @@
                 <div class="headline-wrap">
                     <h1 aria-label="Value in Complexity collapses to Valplex">
                         <span class="headline-full">Value in Complexity</span>
-                        <span class="headline-collapse" aria-hidden="true">Valplex</span>
                     </h1>
+                    <div class="hero-wordmark" aria-hidden="true">Valplex</div>
                 </div>
             </div>
         </section>
