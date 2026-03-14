@@ -17,13 +17,18 @@
             --muted: #cfcfcf;
             --panel: #111111;
             --panel-edge: rgba(255, 255, 255, 0.08);
+            --viewport-height: 100vh;
+            --motion-unit: 1vh;
             --edge-space: clamp(20px, 4vw, 48px);
             --progress: 0;
             --phase-one: 0;
             --phase-two: 0;
             --headline-spacing-tighten: 0.06em;
-            --headline-move-one: 28vh;
-            --headline-move-two: 10vh;
+            --logo-offset-start: calc(18 * var(--motion-unit));
+            --logo-phase-one-travel: calc(7 * var(--motion-unit));
+            --logo-phase-two-travel: calc(18 * var(--motion-unit));
+            --headline-move-one: calc(28 * var(--motion-unit));
+            --headline-move-two: calc(10 * var(--motion-unit));
             --headline-scale-one: 0.06;
             --headline-scale-two: 0.08;
             --headline-clip-left: 42%;
@@ -32,13 +37,22 @@
             --headline-fade-two: 0;
             --wordmark-spacing-one: 0.18em;
             --wordmark-spacing-two: 0.2em;
-            --wordmark-rise-two: 38vh;
+            --wordmark-offset-start: calc(28 * var(--motion-unit));
+            --wordmark-rise-one: calc(28 * var(--motion-unit));
+            --wordmark-rise-two: calc(38 * var(--motion-unit));
             --wordmark-scale-one: 0.18;
             --wordmark-scale-two: 0.4;
             --wordmark-opacity-base: 0.72;
             --wordmark-opacity-one: 0.34;
             --wordmark-opacity-two: 0;
             --phase-one-end: 0.58;
+        }
+
+        @supports (height: 100svh) {
+            :root {
+                --viewport-height: 100svh;
+                --motion-unit: 1svh;
+            }
         }
 
         * {
@@ -56,20 +70,20 @@
         }
 
         .scroll-stage {
-            min-height: 200vh;
+            min-height: calc(var(--viewport-height) * 2);
             background: var(--bg);
         }
 
         .hero {
             position: sticky;
             top: 0;
-            min-height: 100vh;
+            min-height: var(--viewport-height);
             padding: var(--edge-space);
             overflow: hidden;
         }
 
         .hero-content {
-            min-height: calc(100vh - (2 * var(--edge-space)));
+            min-height: calc(var(--viewport-height) - (2 * var(--edge-space)));
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -87,7 +101,7 @@
             left: 50%;
             transform:
                 translateX(-50%)
-                translateY(calc(18vh - (var(--phase-one) * 7vh) - (var(--phase-two) * 18vh)))
+                translateY(calc(var(--logo-offset-start) - (var(--phase-one) * var(--logo-phase-one-travel)) - (var(--phase-two) * var(--logo-phase-two-travel))))
                 scale(calc(1 - (var(--phase-two) * 0.12)));
             transition: transform 0.06s linear;
             will-change: transform;
@@ -132,7 +146,7 @@
             left: 50%;
             top: 50%;
             transform:
-                translate(-50%, calc(28vh - (var(--phase-one) * 28vh) - (var(--phase-two) * var(--wordmark-rise-two))))
+                translate(-50%, calc(var(--wordmark-offset-start) - (var(--phase-one) * var(--wordmark-rise-one)) - (var(--phase-two) * var(--wordmark-rise-two))))
                 scale(calc(0.92 + (var(--phase-one) * var(--wordmark-scale-one)) - (var(--phase-two) * var(--wordmark-scale-two))));
             opacity: calc(var(--wordmark-opacity-base) + (var(--phase-one) * var(--wordmark-opacity-one)) - (var(--phase-two) * var(--wordmark-opacity-two)));
             transition: transform 0.06s linear, opacity 0.06s linear;
@@ -140,7 +154,7 @@
         }
 
         .second-page {
-            min-height: 100vh;
+            min-height: var(--viewport-height);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -187,6 +201,38 @@
         }
 
         @media (max-width: 780px) {
+            :root {
+                --headline-spacing-tighten: 0.035em;
+                --headline-move-one: calc(22 * var(--motion-unit));
+                --headline-move-two: calc(7 * var(--motion-unit));
+                --headline-scale-one: 0.04;
+                --headline-scale-two: 0.05;
+                --headline-clip-left: 36%;
+                --headline-clip-right: 36%;
+                --wordmark-spacing-one: 0.14em;
+                --wordmark-spacing-two: 0.14em;
+                --wordmark-rise-two: calc(26 * var(--motion-unit));
+                --wordmark-scale-one: 0.12;
+                --wordmark-scale-two: 0.22;
+            }
+
+            .logo {
+                width: clamp(84px, 24vw, 120px);
+            }
+
+            .headline-wrap {
+                width: min(94vw, 560px);
+                min-height: clamp(150px, 28vh, 220px);
+            }
+
+            h1 {
+                font-size: clamp(24px, 7.6vw, 42px);
+            }
+
+            .bottom {
+                font-size: clamp(11px, 3vw, 15px);
+            }
+
             .second-page-content {
                 grid-template-columns: 1fr;
             }
@@ -236,6 +282,7 @@
     <script>
         (function () {
             const root = document.documentElement;
+            const hero = document.querySelector('.hero');
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
             function updateProgress() {
@@ -246,7 +293,7 @@
                     return;
                 }
 
-                const viewport = window.innerHeight || 1;
+                const viewport = hero ? hero.getBoundingClientRect().height : (window.innerHeight || 1);
                 const progress = Math.min(Math.max(window.scrollY / viewport, 0), 1);
                 const phaseOneEnd = parseFloat(getComputedStyle(root).getPropertyValue('--phase-one-end')) || 0.58;
                 const phaseOne = Math.min(progress / phaseOneEnd, 1);
