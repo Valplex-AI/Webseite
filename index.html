@@ -172,6 +172,11 @@
             --phase-two: 0;
         }
 
+        .hero-stage.is-header-handoff .logo,
+        .hero-stage.is-header-handoff .hero-wordmark {
+            opacity: 0;
+        }
+
         .hero {
             position: sticky;
             top: 0;
@@ -630,6 +635,7 @@
             let lastWordmarkTransform = '';
             let lastWordmarkOpacity = '';
             let headerVisible = false;
+            let headerHandoff = false;
 
             function refreshMeasurements() {
                 viewport = window.innerHeight || 1;
@@ -656,13 +662,13 @@
                 return `${Math.round(value * 100) / 100}px`;
             }
 
-            function updateMobileMotion(phaseOne, phaseTwo) {
+            function updateMobileMotion(phaseOne, phaseTwo, isHandoff) {
                 const motionUnit = viewport / 100;
                 const logoTransform = `translate3d(-50%, ${formatPx((18 * motionUnit) - (phaseOne * 7 * motionUnit) - (phaseTwo * 9 * motionUnit))}, 0) scale(${1 - (phaseTwo * 0.12)})`;
                 const headlineTransform = `translate3d(-50%, calc(-50% + ${formatPx((phaseOne * -18 * motionUnit) - (phaseTwo * 7 * motionUnit))}), 0) scale(${1 - (phaseOne * 0.04) - (phaseTwo * 0.05)})`;
                 const headlineOpacity = `${Math.max(1 - phaseOne, 0)}`;
                 const wordmarkTransform = `translate3d(-50%, calc(-50% + ${formatPx((24 * motionUnit) - (phaseOne * 13 * motionUnit) - (phaseTwo * 11 * motionUnit))}), 0) scale(${0.9 + (phaseOne * 0.05) + (phaseTwo * 0.03)})`;
-                const wordmarkOpacity = `${Math.min((phaseOne * 0.7) + (phaseTwo * 0.3), 1)}`;
+                const wordmarkOpacity = isHandoff ? '0' : `${Math.min((phaseOne * 0.7) + (phaseTwo * 0.3), 1)}`;
 
                 if (logo && logoTransform !== lastLogoTransform) {
                     logo.style.transform = logoTransform;
@@ -699,10 +705,11 @@
                 const progressValue = progress.toFixed(4);
                 const phaseOneValue = phaseOne.toFixed(4);
                 const phaseTwoValue = phaseTwo.toFixed(4);
-                const nextHeaderVisible = progress >= 0.82;
+                const nextHeaderVisible = headerVisible ? progress >= 0.78 : progress >= 0.82;
+                const nextHeaderHandoff = headerHandoff ? progress >= 0.74 : progress >= 0.8;
 
                 if (useDirectMobileMotion) {
-                    updateMobileMotion(phaseOne, phaseTwo);
+                    updateMobileMotion(phaseOne, phaseTwo, nextHeaderHandoff);
                 } else {
                     if (heroStage && progressValue !== lastProgress) {
                         heroStage.style.setProperty('--progress', progressValue);
@@ -718,6 +725,11 @@
                         heroStage.style.setProperty('--phase-two', phaseTwoValue);
                         lastPhaseTwo = phaseTwoValue;
                     }
+                }
+
+                if (heroStage && nextHeaderHandoff !== headerHandoff) {
+                    heroStage.classList.toggle('is-header-handoff', nextHeaderHandoff);
+                    headerHandoff = nextHeaderHandoff;
                 }
 
                 if (siteHeader) {
