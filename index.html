@@ -201,8 +201,11 @@
             top: clamp(18px, 4vh, 36px);
             left: 50%;
             transform:
-                translateX(-50%)
-                translateY(calc(var(--logo-offset-start) - (var(--phase-one) * var(--logo-phase-one-travel)) - (var(--phase-two) * var(--logo-phase-two-travel))))
+                translate3d(
+                    -50%,
+                    calc(var(--logo-offset-start) - (var(--phase-one) * var(--logo-phase-one-travel)) - (var(--phase-two) * var(--logo-phase-two-travel))),
+                    0
+                )
                 scale(calc(1 - (var(--phase-two) * 0.12)));
             will-change: transform;
         }
@@ -232,7 +235,11 @@
             justify-content: center;
             white-space: nowrap;
             transform:
-                translate(-50%, calc(-50% + (var(--phase-one) * var(--headline-move-one)) - (var(--phase-two) * var(--headline-move-two))))
+                translate3d(
+                    -50%,
+                    calc(-50% + (var(--phase-one) * var(--headline-move-one)) - (var(--phase-two) * var(--headline-move-two))),
+                    0
+                )
                 scale(calc(1 - (var(--phase-one) * var(--headline-scale-one)) - (var(--phase-two) * var(--headline-scale-two))));
             transform-origin: center center;
             will-change: transform;
@@ -266,7 +273,11 @@
             position: absolute;
             top: var(--collapse-top);
             transform:
-                translate(-50%, calc(-50% + var(--collapse-offset-start) - (var(--phase-one) * var(--collapse-rise-one)) - (var(--phase-two) * var(--collapse-rise-two))))
+                translate3d(
+                    -50%,
+                    calc(-50% + var(--collapse-offset-start) - (var(--phase-one) * var(--collapse-rise-one)) - (var(--phase-two) * var(--collapse-rise-two))),
+                    0
+                )
                 scale(calc(var(--collapse-scale-base) + (var(--phase-one) * var(--collapse-scale-one)) + (var(--phase-two) * var(--collapse-scale-two))));
             letter-spacing: calc(var(--collapse-spacing-base) - (var(--phase-one) * var(--collapse-spacing-one)) - (var(--phase-two) * var(--collapse-spacing-two)));
             opacity: calc((var(--phase-one) * var(--collapse-opacity-one)) + (var(--phase-two) * var(--collapse-opacity-two)));
@@ -491,6 +502,17 @@
 
             .headline-collapse {
                 font-size: clamp(16px, 4.6vw, 24px);
+            }
+
+            .headline-full {
+                clip-path: none;
+                letter-spacing: -0.03em;
+                will-change: opacity;
+            }
+
+            .hero-wordmark {
+                letter-spacing: var(--collapse-spacing-base);
+                will-change: transform, opacity;
             }
 
             .second-page-content {
