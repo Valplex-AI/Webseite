@@ -58,7 +58,7 @@
             --logo-offset-start: calc(24 * var(--motion-unit));
             --logo-phase-one-travel: calc(10 * var(--motion-unit));
             --logo-phase-two-travel: calc(12 * var(--motion-unit));
-            --headline-move-one: calc(28 * var(--motion-unit));
+            --headline-move-one: calc(-6.5 * var(--motion-unit));
             --headline-move-two: calc(10 * var(--motion-unit));
             --headline-scale-one: 0.06;
             --headline-scale-two: 0.08;
@@ -204,7 +204,6 @@
                 translateX(-50%)
                 translateY(calc(var(--logo-offset-start) - (var(--phase-one) * var(--logo-phase-one-travel)) - (var(--phase-two) * var(--logo-phase-two-travel))))
                 scale(calc(1 - (var(--phase-two) * 0.12)));
-            transition: transform 0.06s linear;
             will-change: transform;
         }
 
@@ -236,7 +235,6 @@
                 translate(-50%, calc(-50% + (var(--phase-one) * var(--headline-move-one)) - (var(--phase-two) * var(--headline-move-two))))
                 scale(calc(1 - (var(--phase-one) * var(--headline-scale-one)) - (var(--phase-two) * var(--headline-scale-two))));
             transform-origin: center center;
-            transition: transform 0.06s linear;
             will-change: transform;
         }
 
@@ -257,7 +255,6 @@
             letter-spacing: calc(-0.03em - (var(--phase-one) * var(--headline-spacing-tighten)));
             clip-path: inset(0 calc(var(--phase-one) * var(--headline-clip-right)) 0 calc(var(--phase-one) * var(--headline-clip-left)));
             opacity: calc(1 - (var(--phase-one) * var(--headline-fade-one)) - (var(--phase-two) * var(--headline-fade-two)));
-            transition: opacity 0.06s linear, letter-spacing 0.06s linear, clip-path 0.06s linear;
             will-change: opacity, letter-spacing, clip-path;
         }
 
@@ -273,7 +270,6 @@
                 scale(calc(var(--collapse-scale-base) + (var(--phase-one) * var(--collapse-scale-one)) + (var(--phase-two) * var(--collapse-scale-two))));
             letter-spacing: calc(var(--collapse-spacing-base) - (var(--phase-one) * var(--collapse-spacing-one)) - (var(--phase-two) * var(--collapse-spacing-two)));
             opacity: calc((var(--phase-one) * var(--collapse-opacity-one)) + (var(--phase-two) * var(--collapse-opacity-two)));
-            transition: transform 0.06s linear, opacity 0.06s linear, letter-spacing 0.06s linear;
             will-change: transform, opacity, letter-spacing;
         }
 
@@ -463,7 +459,7 @@
         @media (max-width: 780px) {
             :root {
                 --headline-spacing-tighten: 0.035em;
-                --headline-move-one: calc(22 * var(--motion-unit));
+                --headline-move-one: calc(-18 * var(--motion-unit));
                 --headline-move-two: calc(7 * var(--motion-unit));
                 --headline-scale-one: 0.04;
                 --headline-scale-two: 0.05;
